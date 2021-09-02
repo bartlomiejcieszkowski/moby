@@ -75,7 +75,8 @@ const (
     $env:_ag_dockerVersion=$DockerVersion
     $env:_ag_gitCommit=$CommitString
 
-    windres -i hack/make/.resources-windows/dockerd.rc -o autogen/winresources/dockerd/rsrc_amd64.syso -F pe-x86-64 --use-temp-file -I autogen/winresources/tmp -D DOCKER_VERSION_QUAD=$versionQuad --% -D DOCKER_VERSION=\"%_ag_dockerVersion%\" -D DOCKER_COMMIT=\"%_ag_gitCommit%\"
+    'windres -v -i hack/make/.resources-windows/dockerd.rc -o autogen/winresources/dockerd/rsrc_amd64.syso -F pe-x86-64 --use-temp-file -I autogen/winresources/tmp -D DOCKER_VERSION_QUAD="' + $versionQuad +'" -D DOCKER_VERSION="\"' + $DockerVersion +'\"" -D DOCKER_COMMIT="\"' + $CommitString + '\""' | out-file windres_run.bat
+    .\windres_run.bat
     if ($LASTEXITCODE -ne 0) { Throw "Failed to compile daemon resources" }
 }
 Catch [Exception] {
